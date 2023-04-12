@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useReducer, useState, useRef } from "react";
 import axios from "axios";
 import { ChatMessage, Sender } from "@/models/chatMessage";
 
@@ -13,7 +13,7 @@ const defaultMessages = [
   },
   {
     id: 1,
-    message: `これから${MaxGameTurn}個までの質問で、お題の単語を当てるゲームを始めるよ。`,
+    message: `これからゲームを始めます。${MaxGameTurn}個までの質問で、お題の単語を当ててみてください！`,
     sender: "AI" as Sender,
   },
   {
@@ -188,7 +188,7 @@ const ChatBox: React.FC<Props> = () => {
         const finalMessage =
           aiText === "正解"
             ? `正解！おめでとう！答えは${state.theme}でした！`
-            : `残念！ゲームオーバーだよ！答えは${state.theme}でした！`;
+            : `残念！ゲームオーバー！答えは${state.theme}でした！`;
         addMessage({
           id: state.messages.length + 1,
           message: finalMessage,
@@ -208,12 +208,27 @@ const ChatBox: React.FC<Props> = () => {
     sendMessage();
   };
 
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const scrollToBottom = () => {
+    setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, 0);
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [state.messages]);
+
   return (
     <div className="w-full h-full flex flex-col">
-      <div className="w-full h-full overflow-y-auto divide-y divide-gray-300 flex-grow">
+      <div className="w-full divide-y overflow-y-scroll divide-gray-300 flex-grow">
         {state.messages.map((message, index) => renderMessage(message, index))}
+        <div ref={messagesEndRef}></div>
       </div>
-      <div className="w-full flex-none p-2">
+      <div
+        className="w-full flex-none pb-6 pt-6 bg-black"
+        style={{ position: "sticky", bottom: 0 }}
+      >
         <div className="flex items-center">
           <input
             type="text"
@@ -223,6 +238,7 @@ const ChatBox: React.FC<Props> = () => {
             onKeyDown={handleKeyDown}
             maxLength={50}
             disabled={isWaitingResponse || state.isGameFinished}
+            placeholder="それは食べ物ですか？"
           />
           <button
             className="bg-blue-500 text-white p-2 rounded h-10 disabled:opacity-50"
