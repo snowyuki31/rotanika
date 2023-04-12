@@ -220,10 +220,14 @@ const ChatBox: React.FC<Props> = () => {
   }, [state.messages]);
 
   return (
-    <div className="w-full h-full flex flex-col">
-      <div className="w-full divide-y overflow-y-scroll divide-gray-300 flex-grow">
-        {state.messages.map((message, index) => renderMessage(message, index))}
-        <div ref={messagesEndRef}></div>
+    <div className="w-full h-7/8 flex flex-col py-12">
+      <div className="overflow-y-scroll">
+        <div className="w-full divide-y divide-gray-300 flex-grow">
+          {state.messages.map((message, index) =>
+            renderMessage(message, index)
+          )}
+          <div ref={messagesEndRef}></div>
+        </div>
       </div>
       <div
         className="w-full flex-none pb-6 pt-6 bg-black"
@@ -232,7 +236,7 @@ const ChatBox: React.FC<Props> = () => {
         <div className="flex items-center">
           <input
             type="text"
-            className="w-full mr-2 border border-gray-300 p-2 h-10 rounded text-black disabled:bg-gray-500 disabled:opacity-50"
+            className="w-full mr-2 borde p-2 h-10 rounded text-black disabled:bg-gray-500 disabled:opacity-50"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={handleKeyDown}
