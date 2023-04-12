@@ -113,7 +113,7 @@ const ChatBox: React.FC<Props> = () => {
       const theme = response.data.theme;
       const aiMessage: ChatMessage = {
         id: state.messages.length + 1,
-        message: "お題は" + theme + "だよ！それではゲームスタート！",
+        message: "準備完了！それではゲームスタート！",
         sender: "AI",
       };
       setTheme(theme);
