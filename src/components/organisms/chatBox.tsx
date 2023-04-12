@@ -208,10 +208,13 @@ const ChatBox: React.FC<Props> = () => {
     sendMessage();
   };
 
-  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const messagesContainerRef = useRef<HTMLDivElement | null>(null);
   const scrollToBottom = () => {
     setTimeout(() => {
-      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+      messagesContainerRef.current?.scrollTo({
+        top: messagesContainerRef.current.scrollHeight,
+        behavior: "smooth",
+      });
     }, 0);
   };
 
@@ -220,17 +223,17 @@ const ChatBox: React.FC<Props> = () => {
   }, [state.messages]);
 
   return (
-    <div className="w-full h-7/8 flex flex-col py-12">
-      <div className="overflow-y-scroll">
-        <div className="w-full divide-y divide-gray-300 flex-grow">
-          {state.messages.map((message, index) =>
-            renderMessage(message, index)
-          )}
-          <div ref={messagesEndRef}></div>
-        </div>
+    <div className="w-full  h-7/8 flex flex-col pt-12">
+      <div
+        className="w-full divide-y divide-gray-300 flex-grow overscroll-auto overflow-y-auto"
+        ref={messagesContainerRef}
+      >
+        {state.messages.map((message, index) => (
+          <>{renderMessage(message, index)}</>
+        ))}
       </div>
       <div
-        className="w-full flex-none pb-6 pt-6 bg-black"
+        className="w-full flex-none pt-2 pb-4 bg-black"
         style={{ position: "sticky", bottom: 0 }}
       >
         <div className="flex items-center">
